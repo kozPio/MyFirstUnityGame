@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 4801340177564888498}
   - component: {fileID: 1296504711327444826}
   m_Layer: 7
-  m_Name: Sphere
-  m_TagString: Untagged
+  m_Name: Coin
+  m_TagString: Selectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
