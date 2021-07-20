@@ -6,19 +6,32 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private  Transform groundCheckTransform = null;
+    public float walkspeed = 2.5f;
+    public float jumpheight = 5f;
+    public float groundCheckRadius = 0.2f;
+
+    private Animator animator;
+    private bool isGrounded;
+
+    
+
+    
+
     [SerializeField]  private LayerMask playerMask;
     [SerializeField] private GameObject other;
     private bool jumpKeyWasPressed = false;
-    private float horizonatalInput;
+    
     private Rigidbody rigidBodyComponent;
     private Transform positionComponent;
     private int superJumpsRemaning = 0;
+    private float inputMovment;
     
 
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         rigidBodyComponent = GetComponent<Rigidbody>();
         positionComponent = GetComponent<Transform>();
     }
@@ -34,7 +47,7 @@ public class Player : MonoBehaviour
         }
 
 
-        horizonatalInput = Input.GetAxis("Horizontal");
+        inputMovment = Input.GetAxis("Horizontal");
 
 
         if(positionComponent.position.y < -3)
@@ -50,7 +63,7 @@ public class Player : MonoBehaviour
     // FixedUpdate is caled while every phisics updates
     void FixedUpdate()
     {
-        rigidBodyComponent.velocity = new Vector3(horizonatalInput*2, rigidBodyComponent.velocity.y, 0);
+        rigidBodyComponent.velocity = new Vector3(inputMovment* walkspeed, rigidBodyComponent.velocity.y, 0);
 
         if (Physics.OverlapSphere(groundCheckTransform.position, 0.1f, playerMask).Length == 0)
         {
