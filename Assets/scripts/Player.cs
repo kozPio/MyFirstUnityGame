@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private Rigidbody rigidBodyComponent;
     private bool isGrounded;
     private Camera mainCamera;
-
+    public LayerMask groundMask;
 
     private int FacingSign
     {
@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
             
         }
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rigidBodyComponent.velocity = new Vector3(rigidBodyComponent.velocity.x, 0, 0);
             rigidBodyComponent.AddForce(Vector3.up * Mathf.Sqrt(jumpheight * -1 * Physics.gravity.y), ForceMode.VelocityChange);
@@ -87,12 +87,19 @@ public class Player : MonoBehaviour
         animator.SetFloat("speed", FacingSign * rigidBodyComponent.velocity.x / walkspeed);
         rigidBodyComponent.MoveRotation(Quaternion.Euler(new Vector3(0, 90 * Mathf.Sign(targetTransform.position.x - transform.position.x), 0)));
 
-     
-        
 
+        isGrounded = Physics.CheckSphere(groundCheckTransform.position, groundCheckRadius, groundMask, QueryTriggerInteraction.Ignore);
+        animator.SetBool("isGrounded", isGrounded);
     }
 
 
+    private void OnAnimatorIK()
+    {
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+        animator.SetIKPosition(AvatarIKGoal.RightHand, targetTransform.position);
 
+        animator.SetLookAtWeight(1);
+        animator.SetLookAtPosition(targetTransform.position);
+    }
 
 }
