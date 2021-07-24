@@ -15,12 +15,22 @@ public class Player : MonoBehaviour
     public Transform targetTransform;
     public LayerMask mouseAimMask;
 
+    public Transform muzzleTransform;
+    public LayerMask groundMask;
+    public GameObject bulletPreFab;
+
+    public AnimationCurve recoilCurv;
+    public float recoilDuration = 0.25f;
+    public float recoilMaxRotation = 45f;
+    public Transform rightLowerArm;
+    public Transform rightHand;
+
     private float inputMovment;
     private Animator animator;
     private Rigidbody rigidBodyComponent;
     private bool isGrounded;
     private Camera mainCamera;
-    public LayerMask groundMask;
+    private float recoilTimer;
 
     private int FacingSign
     {
@@ -75,9 +85,45 @@ public class Player : MonoBehaviour
             rigidBodyComponent.velocity = new Vector3(rigidBodyComponent.velocity.x, 0, 0);
             rigidBodyComponent.AddForce(Vector3.up * Mathf.Sqrt(jumpheight * -1 * Physics.gravity.y), ForceMode.VelocityChange);
         }
-        
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Fire();
+        }
 
         
+    }
+
+    private void Fire()
+    {
+        recoilTimer = Time.time;
+
+        var go = Instantiate(bulletPreFab);
+        go.transform.position = muzzleTransform.position;
+        var bullet = go.GetComponent<Bullet>();
+        bullet.Fire(go.transform.position, muzzleTransform.eulerAngles, gameObject.layer);
+
+        
+    }
+
+    private void LateUpdate()
+    {
+        if( recoilTimer< 0)
+        {
+            return;
+        }
+
+        float curveTime = (Time.time - recoilTimer) / recoilDuration;
+
+        if(curveTime > 1f)
+        {
+            recoilTimer = -1f;
+
+        }
+        else
+        {
+            rightLowerArm.Rotate(Vector3.forward, recoilCurv.Evaluate(curveTime) * recoilMaxRotation, Space.Self);
+        }
     }
 
     // FixedUpdate is caled while every phisics updates

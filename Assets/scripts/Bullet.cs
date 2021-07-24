@@ -31,14 +31,25 @@ public class Bullet : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(vop, Vector3.forward);
             Hit(transform.position, direction, reflected, hit.collider);
         }
+        else
+        {
+            transform.Translate(Vector3.forward * velocity * Time.deltaTime);
+        }
+
+        if( Time.time >  lifeTimer + life)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Hit(Vector3 position, Vector3 direction, Vector3 reflected, Collider colider)
     {
+        // Do something here with object that was hit (collider) e.g. collider.gameObject
 
+        Destroy(gameObject);
     }
 
-    public void fire(Vector3 position, Vector3 euler, int layer)
+    public void Fire(Vector3 position, Vector3 euler, int layer)
     {
         lifeTimer = Time.time;
         transform.position = position;
