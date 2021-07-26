@@ -91,6 +91,11 @@ public class Player : MonoBehaviour
             Fire();
         }
 
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            //add switching gun
+        }
+
         
     }
 
